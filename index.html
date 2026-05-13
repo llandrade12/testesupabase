@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#16a34a">
+<title>Trupe Fantasma</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<button class="menu-toggle" onclick="toggleSidebar()" id="menuToggle">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">Gestão de Etiquetas</div>
+      <div class="logo-sub">Contador de Status</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">Principal</div>
+    <button class="nav-item active" onclick="goPage('contacts',this)" id="nav-contacts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Contatos
+      <span class="nav-badge" id="navBadgeContacts">0</span>
+    </button>
+    <button class="nav-item" onclick="goPage('agenda',this)" id="nav-agenda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Agenda
+      <span class="nav-badge" id="navBadgeAgenda">0</span>
+    </button>
+    <button class="nav-item" onclick="goPage('add',this)" id="nav-add">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Novo contato
+    </button>
+    <button class="nav-item" onclick="goPage('labels',this)" id="nav-labels">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      Etiquetas
+    </button>
+
+    <div class="nav-section">Ferramentas</div>
+    <button class="nav-item" onclick="openSheetsModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Google Sheets
+      <span class="nav-badge" id="navSheetsStatus" style="display:none;background:rgba(22,163,74,.1);border-color:rgba(22,163,74,.2);color:var(--accent);">●</span>
+    </button>
+    <button class="nav-item" id="btnPwa" onclick="installPwa()" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Instalar app
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="nav-item" onclick="toggleTheme()" id="btnTheme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="themeIcon"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      Tema
+    </button>
+  </div>
+</aside>
+
+<!-- ─── MAIN ─────────────────────────────────────── -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">Contatos</div>
+    <div class="topbar-date-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;color:var(--text-3)"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <input type="date" id="activeDate">
+    </div>
+    <button class="btn-ghost" onclick="goToToday()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 22 22 7 12 2"/></svg>
+      Hoje
+    </button>
+    <span id="dateBadge" style="font-size:12px;color:var(--text-3);font-weight:500;"></span>
+  </div>
+
+  <!-- PAGE: CONTACTS -->
+  <div class="page active" id="page-contacts">
+    <div class="page-body">
+
+      <div class="pwa-banner" id="pwaBanner">
+        <span style="font-size:20px">📲</span>
+        <div class="pwa-banner-text"><strong>Instale como app!</strong> Acesse direto da tela inicial sem navegador.</div>
+        <button class="btn-primary" onclick="installPwa()">Instalar</button>
+        <button class="btn-secondary" onclick="dismissPwa()">Dispensar</button>
+      </div>
+
+      <!-- STATS -->
+      <div class="stat-strip">
+        <div class="stat-cell">
+          <div class="stat-lbl">Total hoje</div>
+          <div class="stat-val" id="scTotal">0</div>
+          <div class="stat-sub">contatos</div>
+        </div>
+        <div class="stat-cell s-green">
+          <div class="stat-lbl">Com telefone</div>
+          <div class="stat-val" id="scWa">0</div>
+          <div class="stat-sub">prontos pro WA</div>
+        </div>
+        <div class="stat-cell s-blue">
+          <div class="stat-lbl">Etiquetados</div>
+          <div class="stat-val" id="scLbl">0</div>
+          <div class="stat-sub">de <span id="scLblTotal">0</span> labels</div>
+        </div>
+        <div class="stat-cell s-yellow">
+          <div class="stat-lbl">Sem etiqueta</div>
+          <div class="stat-val" id="scNone">0</div>
+          <div class="stat-sub">a classificar</div>
+        </div>
+        <div class="stat-cell s-orange clickable" onclick="toggleConvPanel()" title="Ver conversão">
+          <div class="stat-lbl">Conversão</div>
+          <div class="stat-val" id="scConv">—</div>
+          <div class="stat-sub">clique p/ detalhes</div>
+        </div>
+      </div>
+
+      <!-- META -->
+      <div class="meta-strip">
+        <div class="meta-strip-top">
+          <span class="meta-strip-label">🎯 Meta diária</span>
+          <div class="meta-strip-input-wrap">
+            <label>Alvo:</label>
+            <input type="number" id="metaInput" min="1" max="999" placeholder="30" oninput="saveMeta()">
+            <span id="metaEmoji"></span>
+          </div>
+        </div>
+        <div class="meta-track"><div class="meta-fill" id="metaBar" style="width:0%"></div></div>
+        <div class="meta-info">
+          <span id="metaLeft">Defina uma meta</span>
+          <span id="metaPct">—</span>
+        </div>
+      </div>
+
+      <!-- CONV PANEL -->
+      <div class="conv-panel" id="convPanel">
+        <div class="conv-panel-title">Taxa de conversão — <span id="convDate">hoje</span></div>
+        <div class="conv-row" id="convGrid"></div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Buscar por nome, telefone…" oninput="renderList()">
+        </div>
+        <div class="sel-field">
+          <select id="estadoFilter" onchange="renderList()">
+            <option value="">Todos os estados</option>
+          </select>
+        </div>
+        <div class="sort-group">
+          <button class="sort-btn active" id="sortBtnDate" onclick="setSort('date',this)">Data <span id="sortDirDate">↓</span></button>
+          <button class="sort-btn" id="sortBtnName" onclick="setSort('name',this)">Nome <span id="sortDirName">↑</span></button>
+          <button class="sort-btn" id="sortBtnLabel" onclick="setSort('label',this)">Label <span id="sortDirLabel">↑</span></button>
+        </div>
+        <button class="btn-ghost" id="btnViewAll" onclick="toggleViewAll()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Ver todos
+        </button>
+      </div>
+
+      <!-- FILTER PILLS -->
+      <div class="filter-row" id="filterBar">
+        <span class="filter-lbl">Filtrar</span>
+        <button class="filter-pill active" data-filter="all" onclick="setFilter('all',this)">Todos</button>
+        <button class="filter-pill" data-filter="none" onclick="setFilter('none',this)">Sem etiqueta</button>
+      </div>
+
+      <!-- LIST -->
+      <div class="list-header-row">
+        <div class="list-title-text" id="listTitle">Contatos do dia</div>
+        <span class="list-count" id="countPill">0 registros</span>
+      </div>
+      <div class="sync-indicator" id="syncBar"></div>
+      <div id="mainList"></div>
+
+      <!-- ACTIONS BAR -->
+      <div class="actions-bar">
+        <button class="action-tile at-orange" onclick="copyReport()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          <div><div>Copiar relatório</div><div class="action-tile-desc">Texto por etiqueta</div></div>
+        </button>
+        <button class="action-tile at-blue" onclick="document.getElementById('importInput').click()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div><div>Importar CSV</div><div class="action-tile-desc">Carregar de outro dia</div></div>
+        </button>
+        <button class="action-tile at-green" onclick="exportCSV()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div><div>Exportar CSV</div><div class="action-tile-desc">Salvar backup</div></div>
+        </button>
+        <button class="action-tile" style="border-color:rgba(124,58,237,.35);background:rgba(124,58,237,.04)" onclick="exportBackup()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/><circle cx="12" cy="20" r="0" fill="#7c3aed"/></svg>
+          <div><div style="color:#7c3aed;font-weight:600">Exportar Backup</div><div class="action-tile-desc">Tudo: fichas, fotos, etiquetas</div></div>
+        </button>
+        <button class="action-tile" style="border-color:rgba(124,58,237,.35);background:rgba(124,58,237,.04)" onclick="document.getElementById('importBackupInput').click()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <div><div style="color:#7c3aed;font-weight:600">Importar Backup</div><div class="action-tile-desc">Restaurar arquivo .trupe</div></div>
+        </button>
+        <button class="action-tile" style="border-color:rgba(220,38,38,.3);background:rgba(220,38,38,.04)" onclick="deleteAllContacts()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          <div><div style="color:#dc2626;font-weight:600">Excluir Contatos</div><div class="action-tile-desc">Apagar todos do dia atual</div></div>
+        </button>
+      </div>
+      <input type="file" id="importInput" accept=".csv" onchange="importCSV(event)">
+      <input type="file" id="importBackupInput" accept=".trupe,.zip" onchange="importBackup(event)" style="display:none">
+
+    </div>
+  </div>
+
+  <!-- PAGE: ADD -->
+  <div class="page" id="page-add">
+    <div class="page-body">
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Novo contato
+        </div>
+
+        <div class="parser-block">
+          <div class="parser-lbl">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Colar ficha automática
+          </div>
+          <textarea id="parserInput" placeholder="Cole o texto da ficha financeira aqui — os campos preenchem sozinhos…" oninput="tryParseText()"></textarea>
+          <div class="parser-fb" id="parserFeedback"></div>
+        </div>
+
+        <div class="av-upload">
+          <div class="av-btn" id="avatarPreview" onclick="document.getElementById('avatarFile').click()" title="Adicionar foto">📷</div>
+          <input type="file" id="avatarFile" accept="image/*" style="display:none" onchange="onAvatarChange(event,'add')">
+          <div>
+            <div style="font-size:13px;font-weight:500;color:var(--text)">Foto do contato</div>
+            <div style="font-size:12px;color:var(--text-3);margin-top:2px">Opcional — clique para adicionar</div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field"><label>Nome</label><input type="text" id="inputName" placeholder="João Silva" oninput="onNameInput()"></div>
+          <div class="field"><label>Telefone</label><input type="text" id="inputPhone" placeholder="(11) 99999-9999" maxlength="20"></div>
+          <div class="field"><label>Data</label><input type="date" id="inputDate"></div>
+          <div class="field"><label>Etiqueta</label><select id="inputLabel" onchange="onLabelChange()"><option value="">— Sem etiqueta —</option></select></div>
+        </div>
+
+        <div class="field" style="margin-top:12px">
+          <label>Estado (UF)</label>
+          <div class="estado-grid" id="estadoGrid"></div>
+        </div>
+
+        <div class="fin-block" id="fichaFinSection">
+          <div class="fin-block-title">💰 Ficha financeira</div>
+          <div class="fin-grid">
+            <div class="field"><label>CPF</label><input type="text" id="inputCpf" placeholder="000.000.000-00"></div>
+            <div class="field"><label>Placa</label><input type="text" id="inputPlaca" placeholder="ABC1D23"></div>
+            <div class="field"><label>Modelo e cor</label><input type="text" id="inputModelo" placeholder="Cobalt / Preto"></div>
+            <div class="field"><label>Valor aprovado (R$)</label><input type="text" id="inputValor" placeholder="500"></div>
+            <div class="field"><label>Chave Pix</label><input type="text" id="inputPix" placeholder="CPF, telefone ou chave"></div>
+            <div class="field"><label>Tel. referência</label><input type="text" id="inputRefTel" placeholder="(11) 99999-9999"></div>
+          </div>
+          <div class="field" style="margin-top:10px"><label>Nome da referência</label><input type="text" id="inputRefNome" placeholder="Nome do familiar ou referência"></div>
+        </div>
+
+        <div class="dup-alert" id="dupAlert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="dupMsg">Número já cadastrado!</span>
+        </div>
+
+        <div class="form-footer">
+          <button class="btn-primary" onclick="addTag()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Adicionar contato
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: LABELS -->
+  <div class="page" id="page-labels">
+    <div class="page-body">
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+          Gerenciar etiquetas
+        </div>
+        <div class="label-create-row">
+          <input type="text" id="inputLabelName" placeholder="Nome da etiqueta (ex: Lead, Aprovado, Retorno…)">
+          <div class="color-picker" id="colorPicker"></div>
+          <button class="btn-primary" onclick="createLabel()">+ Criar</button>
+        </div>
+        <div class="fin-toggle">
+          <input type="checkbox" id="inputLabelFin">
+          <label for="inputLabelFin" style="cursor:pointer">Habilitar <strong>ficha financeira</strong> para esta etiqueta <span class="fin-label-badge">ex: Aprovados</span></label>
+        </div>
+        <div class="existing-labels" id="existingLabels">
+          <span style="font-size:12px;color:var(--text-3)">Nenhuma etiqueta criada ainda.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: AGENDA -->
+  <div class="page" id="page-agenda">
+    <div class="page-body">
+      <div class="card">
+        <div class="card-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Agendamentos de entrevista
+        </div>
+        <div class="agenda-top">
+          <input type="date" class="agenda-date-input" id="entrevistaDateInput">
+          <input type="time" class="agenda-time-input" id="entrevistaTimeInput" placeholder="Hora">
+          <input type="text" class="agenda-desc-input" id="entrevistaDescInput" placeholder="Descrição (ex: Entrevista com João)">
+          <button class="btn-primary" onclick="addEntrevista()">+ Agendar</button>
+        </div>
+        <div class="agenda-list" id="entrevistaFichas">
+          <div class="agenda-empty">Nenhum agendamento.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- ─── EDIT MODAL ─────────────────────────────── -->
+<div class="overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Editar contato</h2>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="av-upload">
+      <div class="av-btn" id="editAvatarPreview" onclick="document.getElementById('editAvatarFile').click()">📷</div>
+      <input type="file" id="editAvatarFile" accept="image/*" style="display:none" onchange="onAvatarChange(event,'edit')">
+      <div style="font-size:12px;color:var(--text-3)">Foto / Avatar</div>
+    </div>
+    <div class="field" style="margin-bottom:10px"><label>Nome</label><input type="text" id="editName"></div>
+    <div class="field" style="margin-bottom:10px"><label>Telefone</label><input type="text" id="editPhone" maxlength="20"></div>
+    <div class="field" style="margin-bottom:10px"><label>Data</label><input type="date" id="editDate"></div>
+    <div class="field" style="margin-bottom:10px"><label>Etiqueta</label><select id="editLabel" onchange="onEditLabelChange()"><option value="">— Sem etiqueta —</option></select></div>
+    <div class="field" style="margin-bottom:10px"><label>Estado (UF)</label><div class="estado-grid" id="estadoGridEdit"></div></div>
+    <div class="fin-block" id="fichaFinSectionEdit">
+      <div class="fin-block-title">💰 Ficha financeira</div>
+      <div class="fin-grid">
+        <div class="field"><label>CPF</label><input type="text" id="editCpf"></div>
+        <div class="field"><label>Placa</label><input type="text" id="editPlaca"></div>
+        <div class="field"><label>Modelo e cor</label><input type="text" id="editModelo"></div>
+        <div class="field"><label>Valor aprovado</label><input type="text" id="editValor"></div>
+        <div class="field"><label>Chave Pix</label><input type="text" id="editPix"></div>
+        <div class="field"><label>Tel. referência</label><input type="text" id="editRefTel"></div>
+      </div>
+      <div class="field" style="margin-top:10px"><label>Nome da referência</label><input type="text" id="editRefNome"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeEditModal()">Cancelar</button>
+      <button class="btn-primary" onclick="saveEdit()">Salvar alterações</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FICHA VIEW MODAL ───────────────────────── -->
+<div class="overlay" id="fichaModal">
+  <div class="ficha-view">
+    <div class="modal-header">
+      <h2 id="fichaModalTitle">Ficha do contato</h2>
+      <button class="modal-close" onclick="closeFichaModal()">✕</button>
+    </div>
+    <div id="fichaModalContent"></div>
+    <div class="doc-section-card" id="docSectionModal">
+      <div class="doc-toggle-row">
+        <input type="checkbox" id="docCheckModal" onchange="onDocCheckModal(this)">
+        <label for="docCheckModal">Documentação analisada?</label>
+        <span id="docSavedBadge" class="doc-saved-pill" style="display:none">✓ Salvo</span>
+      </div>
+      <div class="doc-upload-block" id="docUploadAreaModal">
+        <div class="drop-zone" id="docDropZoneModal" onclick="document.getElementById('docFileInputModal').click()" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="onDocDropModal(event)">
+          Clique ou arraste arquivos aqui
+          <div style="font-size:11px;color:var(--text-3);margin-top:4px">Fotos, PDFs, documentos</div>
+        </div>
+        <input type="file" id="docFileInputModal" multiple accept="image/*,.pdf,.doc,.docx" style="display:none" onchange="onDocFilePickModal(event)">
+        <div class="doc-files" id="docFileListModal"></div>
+        <button class="btn-primary" id="btnSaveFolderModal" onclick="saveClientFolder()" style="margin-top:12px;width:100%;justify-content:center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Salvar pasta do cliente
+        </button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeFichaModal()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SHEETS MODAL ──────────────────────────── -->
+<div class="overlay" id="sheetsModal">
+  <div class="modal modal-xl">
+    <div class="modal-header">
+      <h2>Integração Google Sheets</h2>
+      <button class="modal-close" onclick="closeSheetsModal()">✕</button>
+    </div>
+    <p style="font-size:13px;color:var(--text-2);margin-bottom:16px;line-height:1.6">Dados centralizados na aba <strong>Banco</strong> — acessíveis de qualquer dispositivo.</p>
+
+    <div class="sheets-step">
+      <div class="sheets-step-num">Passo 1 — Crie a planilha</div>
+      <p>Acesse <a href="https://sheets.google.com" target="_blank" rel="noopener">sheets.google.com</a> e crie uma planilha nova.</p>
+    </div>
+    <div class="sheets-step">
+      <div class="sheets-step-num">Passo 2 — Abra o Apps Script</div>
+      <p>Na planilha: <strong>Extensões → Apps Script</strong>. Apague tudo e cole o script:</p>
+      <div style="position:relative;margin-top:9px">
+        <textarea id="scriptDisplay" readonly style="width:100%;height:110px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r6);color:var(--warning);font-family:monospace;font-size:11px;padding:9px;resize:none;outline:none;line-height:1.5;"></textarea>
+        <button onclick="copyAppsScript()" style="position:absolute;top:7px;right:7px;background:var(--surface);border:1px solid var(--border);color:var(--text-2);border-radius:var(--r4);padding:3px 10px;cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;">Copiar</button>
+      </div>
+    </div>
+    <div class="sheets-step">
+      <div class="sheets-step-num">Passo 3 — Publique e cole a URL</div>
+      <p><strong>Implantar → Nova implantação</strong> · Tipo: App da Web · Executar como: <strong>Eu</strong> · Acesso: <strong>Qualquer pessoa</strong>.</p>
+      <div style="margin-top:8px">
+        <input type="text" id="sheetsUrlInput" placeholder="https://script.google.com/macros/s/…" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r6);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:8px 10px;outline:none;transition:border-color .14s;" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+    </div>
+    <div class="sheets-step">
+      <div class="sheets-step-num">Sincronizar Banco</div>
+      <p style="font-size:13px;color:var(--text-2);margin-bottom:10px">Puxa <strong>todos</strong> os contatos salvos no Banco para este dispositivo.</p>
+      <button class="btn-primary" onclick="syncFromSheets()" style="width:100%;justify-content:center">⬇️ Puxar tudo do Banco</button>
+    </div>
+
+    <div class="sheets-status" id="sheetsStatus"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeSheetsModal()">Fechar</button>
+      <button class="btn-secondary" onclick="syncToSheets()">Enviar para o Banco</button>
+      <button class="btn-primary" onclick="saveSheetsCreds()">Salvar & Conectar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="script.js"></script>
+</body>
+</html>
